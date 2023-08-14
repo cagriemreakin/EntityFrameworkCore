@@ -14,6 +14,8 @@ namespace CodeFirst.DAL
 
 		//Navigation Property
 		public Category? Category { get; set; }
+
+		public ProductFeature ProductFeature { get; set; }
 	}
 }
 
