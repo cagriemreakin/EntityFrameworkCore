@@ -8,23 +8,46 @@ Initializer.Build();
 
 using (var _context = new AppDbContext())
 {
-    var category = new Category { Name = "Pencils" };
+    var category = _context.Categories.First(x=>x.Name=="Pencils");
 
-     
-    //Using Product Entity To add entity 
-    _context.Products.Add(new Product { Name = "rotring", Price = 10, Stock = 10, Barcode = "1" ,Category=category});
+    //Product -> Parent
+    //ProductFeature -> Child
+
+    // we can add parent independently
+    var product = new Product {
+        Name = "ruler",
+        Price = 10,
+        Stock = 10,
+        Barcode = "1" ,
+        CategoryId=category.Id,
+        ProductFeature=new ProductFeature {
+            Width=1,
+            Height=5
+        }
+    };
+    _context.Products.Add(product);
+
+    //child-> parent
+    var product2 = new Product
+    {
+        Name = "ruler",
+        Price = 10,
+        Stock = 10,
+        Barcode = "1",
+        CategoryId = category.Id,
+
+    };
+    var productFeature = new ProductFeature
+    {
+        Width = 1,
+        Height = 5,
+        Product =product2
+    };
+
+    _context.ProductFeatures.Add(productFeature);
 
 
-    // using Category to add products. We dont have to give category entity to product. 
-    var product = new Product { Name = "ruler", Price = 10, Stock = 10, Barcode = "1" };
-    category.Products.Add(product);
-
-    //using categoryId
-
-    var categoryEntity = _context.Categories.First(x=>x.Name == "Pencils");
-
-    var product2 = new Product { Name = "faber castel", Price = 10, Stock = 10, Barcode = "1",CategoryId= categoryEntity.Id };
-    _context.Products.Add(product2);
+    
     _context.SaveChanges();
 
 
@@ -33,3 +56,4 @@ using (var _context = new AppDbContext())
 
 
 
+ 
