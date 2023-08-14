@@ -8,38 +8,26 @@ Initializer.Build();
 
 using (var _context = new AppDbContext())
 {
-    //AsNoTracking
-    var products = await _context.Products.AsNoTracking().ToListAsync();
-    products.ForEach(p => {
+    var category = new Category { Name = "Pencils" };
 
-        var state = _context.Entry(p).State;
-        Console.WriteLine($"Id: dotnet {p.Id}, Name: {p.Name}, Price: {p.Price}, Stock: {p.Stock}, State : {state}");
-    });
+     
+    //Using Product Entity To add entity 
+    _context.Products.Add(new Product { Name = "rotring", Price = 10, Stock = 10, Barcode = "1" ,Category=category});
 
 
+    // using Category to add products. We dont have to give category entity to product. 
+    var product = new Product { Name = "ruler", Price = 10, Stock = 10, Barcode = "1" };
+    category.Products.Add(product);
 
-    #region ChangeTracker it allows us to acces objects tracked by ef core.But we use AsNoTracking.
+    //using categoryId
 
-    _context.ChangeTracker.Entries().ToList().ForEach(e =>
-    {
-        if(e.Entity is Product product)
-        {
-            product.Stock = 500;
-        }
-    });
+    var categoryEntity = _context.Categories.First(x=>x.Name == "Pencils");
 
-    #endregion
-
-
-    #region Using ChangeTracker property 
-    //to set common property CreatedDate of Product object for newly added objects
-    //we will override SaveChanges for this
-    _context.Products.Add(new Product { Name = "eraser", Price = 10, Stock = 10, Barcode = "1" });
-    _context.Products.Add(new Product { Name = "book", Price = 10, Stock = 10, Barcode = "2" });
-    _context.Products.Add(new Product { Name = "ruler", Price = 10, Stock = 10, Barcode = "3" });
+    var product2 = new Product { Name = "faber castel", Price = 10, Stock = 10, Barcode = "1",CategoryId= categoryEntity.Id };
+    _context.Products.Add(product2);
     _context.SaveChanges();
 
-    #endregion
+
 
 }
 
