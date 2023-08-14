@@ -3,6 +3,7 @@ using CodeFirst.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeFirst.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230814180844_ManyToMany")]
+    partial class ManyToMany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,19 +120,19 @@ namespace CodeFirst.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("StudentTeacherCrossTable", b =>
+            modelBuilder.Entity("StudentTeacher", b =>
                 {
-                    b.Property<int>("Student_Id")
+                    b.Property<int>("StudentsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Teacher_Id")
+                    b.Property<int>("TeachersId")
                         .HasColumnType("int");
 
-                    b.HasKey("Student_Id", "Teacher_Id");
+                    b.HasKey("StudentsId", "TeachersId");
 
-                    b.HasIndex("Teacher_Id");
+                    b.HasIndex("TeachersId");
 
-                    b.ToTable("StudentTeacherCrossTable");
+                    b.ToTable("StudentTeacher");
                 });
 
             modelBuilder.Entity("CodeFirst.DAL.Product", b =>
@@ -154,21 +157,19 @@ namespace CodeFirst.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("StudentTeacherCrossTable", b =>
+            modelBuilder.Entity("StudentTeacher", b =>
                 {
                     b.HasOne("CodeFirst.DAL.Student", null)
                         .WithMany()
-                        .HasForeignKey("Student_Id")
+                        .HasForeignKey("StudentsId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__StudentId");
+                        .IsRequired();
 
                     b.HasOne("CodeFirst.DAL.Teacher", null)
                         .WithMany()
-                        .HasForeignKey("Teacher_Id")
+                        .HasForeignKey("TeachersId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK__TeacherId");
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CodeFirst.DAL.Category", b =>

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeFirst.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230814173910_OneToOneProductProductFeature")]
-    partial class OneToOneProductProductFeature
+    [Migration("20230814182414_ManyToManyDefineCrossTable")]
+    partial class ManyToManyDefineCrossTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,15 +73,9 @@ namespace CodeFirst.Migrations
             modelBuilder.Entity("CodeFirst.DAL.ProductFeature", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Height")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Width")
@@ -89,10 +83,56 @@ namespace CodeFirst.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
+                    b.ToTable("ProductFeatures");
+                });
 
-                    b.ToTable("ProductFeature");
+            modelBuilder.Entity("CodeFirst.DAL.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("CodeFirst.DAL.Teacher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teachers");
+                });
+
+            modelBuilder.Entity("StudentTeacherCrossTable", b =>
+                {
+                    b.Property<int>("Student_Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Teacher_Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Student_Id", "Teacher_Id");
+
+                    b.HasIndex("Teacher_Id");
+
+                    b.ToTable("StudentTeacherCrossTable");
                 });
 
             modelBuilder.Entity("CodeFirst.DAL.Product", b =>
@@ -110,11 +150,28 @@ namespace CodeFirst.Migrations
                 {
                     b.HasOne("CodeFirst.DAL.Product", "Product")
                         .WithOne("ProductFeature")
-                        .HasForeignKey("CodeFirst.DAL.ProductFeature", "ProductId")
+                        .HasForeignKey("CodeFirst.DAL.ProductFeature", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("StudentTeacherCrossTable", b =>
+                {
+                    b.HasOne("CodeFirst.DAL.Student", null)
+                        .WithMany()
+                        .HasForeignKey("Student_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK__StudentId");
+
+                    b.HasOne("CodeFirst.DAL.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("Teacher_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK__TeacherId");
                 });
 
             modelBuilder.Entity("CodeFirst.DAL.Category", b =>
