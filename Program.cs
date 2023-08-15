@@ -1,59 +1,36 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using System;
 using CodeFirst;
 using CodeFirst.DAL;
-using Microsoft.EntityFrameworkCore;
 
 Initializer.Build();
 
 using (var _context = new AppDbContext())
 {
-    var category = _context.Categories.First(x=>x.Name=="Pencils");
 
-    //Product -> Parent
-    //ProductFeature -> Child
+    //Student -> Teacher
+    var student = new Student { Name = "Emre" };
+    student.Teachers.Add(new Teacher { Name = "Fatih" });
+    student.Teachers.Add(new Teacher { Name = "Mehmet" });
+    _context.Students.Add(student);
 
-    // we can add parent independently
-    var product = new Product {
-        Name = "ruler",
-        Price = 10,
-        Stock = 10,
-        Barcode = "1" ,
-        CategoryId=category.Id,
-        ProductFeature=new ProductFeature {
-            Width=1,
-            Height=5
-        }
-    };
-    _context.Products.Add(product);
-
-    //child-> parent
-    var product2 = new Product
+    //Teacher -> Student
+    var teacher = new Teacher
     {
-        Name = "ruler",
-        Price = 10,
-        Stock = 10,
-        Barcode = "1",
-        CategoryId = category.Id,
+        Name = "Veli",
+        Students = new List<Student>{
+        new Student(){Name = "Ali"}
+    }};
+    _context.Teachers.Add(teacher);
 
-    };
-    var productFeature = new ProductFeature
-    {
-        Width = 1,
-        Height = 5,
-        Product =product2
-    };
+    // Add strudent to existing teacher
+    var existingTeacher = _context.Teachers.First(i => i.Name == "Mehmet");
 
-    _context.ProductFeatures.Add(productFeature);
+    existingTeacher.Students.Add(new Student { Name = "Rıza" });
 
-
-    
     _context.SaveChanges();
-
 
 
 }
 
 
 
- 

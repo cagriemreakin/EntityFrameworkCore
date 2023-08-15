@@ -7,7 +7,7 @@ namespace CodeFirst.DAL
         public string Name { get; set; }
 
         //NAvigation Property
-        public List<Student> Students { get; set; }
+        public List<Student> Students { get; set; } = new List<Student>();
     }
 }
 
