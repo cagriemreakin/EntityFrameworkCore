@@ -7,14 +7,23 @@ Initializer.Build();
 
 using (var _context = new AppDbContext())
 {
-    //eager loading
-    var categorWithProdcut = _context.Categories.Include(x=>x.Products).ThenInclude(x=>x.ProductFeature).First();
+    //explicit loading
+    //sonradan ihtiyaç duyulacak navigation property'e ulaşmayı sağlar
+    var category = _context.Categories.First();
 
-    categorWithProdcut.Products.ForEach(x =>
 
-    Console.WriteLine(x.Name, x.ProductFeature.Id, x.ProductFeature.Height, x.ProductFeature.Width)
-    );
+    //some codes here. maybe business code
+    //
+    //
+    //
+    //Now I need products. To get product of a category I need to use explicit loading using navigation property -> product
 
+    //we need use collection for one to many relationships
+    await _context.Entry(category).Collection(x => x.Products).LoadAsync();
+
+    //For one to one relationships we need to use reference
+    var product = _context.Products.First();
+    await _context.Entry(product).Reference(x => x.ProductFeature).LoadAsync();
 
 
 }
