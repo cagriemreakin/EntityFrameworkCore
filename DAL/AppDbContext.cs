@@ -22,7 +22,8 @@ namespace CodeFirst.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.Entity<Product>().Property(x => x.Price).HasPrecision(18,2);
+
             modelBuilder.Entity<Product>().Property(x => x.PriceKdv).HasComputedColumnSql("[Price] * [Kdv]");
             //modelBuilder.Entity<Product>().Property(x => x.PriceKdv).ValueGeneratedNever(); -> None
             //modelBuilder.Entity<Product>().Property(x => x.PriceKdv).ValueGeneratedOnAdd(); -> Identity

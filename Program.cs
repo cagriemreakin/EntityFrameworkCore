@@ -1,18 +1,22 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using CodeFirst;
 using CodeFirst.DAL;
+using Microsoft.EntityFrameworkCore;
 
 Initializer.Build();
 
 using (var _context = new AppDbContext())
 {
-    var category = new Category { Name = "Pencil", Products = new List<Product> {
-        new Product{Name="Rotring", Price=500, Stock=100, Barcode="qwewq", Kdv=1},
-        new Product{Name="Faber", Price=500, Stock=100, Barcode="qwewq2",Kdv=2},
-    }
-    };
-    _context.Add(category);
-    _context.SaveChanges();
+    //eager loading
+    var categorWithProdcut = _context.Categories.Include(x=>x.Products).ThenInclude(x=>x.ProductFeature).First();
+
+    categorWithProdcut.Products.ForEach(x =>
+
+    Console.WriteLine(x.Name, x.ProductFeature.Id, x.ProductFeature.Height, x.ProductFeature.Width)
+    );
+
+
+
 }
 
 
