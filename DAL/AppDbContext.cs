@@ -23,14 +23,17 @@ namespace CodeFirst.DAL
         {
             modelBuilder.Entity<Product>().HasOne(x => x.ProductFeature).WithOne(x => x.Product).HasForeignKey<ProductFeature>(x => x.Id);
 
-
-
+            // we can change delete behaviour of our table in here Cascade,Restrict,SetNull or NoAction
+            modelBuilder.Entity<Category>().HasMany(x => x.Products)
+                                           .WithOne(x => x.Category)
+                                           .HasForeignKey(x => x.CategoryId)
+                                           .OnDelete(DeleteBehavior.Restrict);
 
             // EF Core version >= 5 creates cross table for the tables which have many to many relationship with each other.
 
             // if we want to create cross table using ef core convention, we need to define it on model creating
 
-
+            
             modelBuilder.Entity<Student>().HasMany(x => x.Teachers)
                                           .WithMany(x => x.Students)
                                           .UsingEntity<Dictionary<string, object>>(

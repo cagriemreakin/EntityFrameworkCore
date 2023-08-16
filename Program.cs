@@ -6,30 +6,17 @@ Initializer.Build();
 
 using (var _context = new AppDbContext())
 {
-
-    //Student -> Teacher
-    var student = new Student { Name = "Emre" };
-    student.Teachers.Add(new Teacher { Name = "Fatih" });
-    student.Teachers.Add(new Teacher { Name = "Mehmet" });
-    _context.Students.Add(student);
-
-    //Teacher -> Student
-    var teacher = new Teacher
-    {
-        Name = "Veli",
-        Students = new List<Student>{
-        new Student(){Name = "Ali"}
-    }};
-    _context.Teachers.Add(teacher);
-
-    // Add strudent to existing teacher
-    var existingTeacher = _context.Teachers.First(i => i.Name == "Mehmet");
-
-    existingTeacher.Students.Add(new Student { Name = "Rıza" });
-
+    var category = new Category { Name = "Pencil", Products = new List<Product> {
+        new Product{Name="Rotring", Price=500, Stock=100, Barcode="qwewq"},
+        new Product{Name="Faber", Price=500, Stock=100, Barcode="qwewq2"},
+    }
+    };
+    _context.Add(category);
     _context.SaveChanges();
 
-
+    var removeCategory = _context.Categories.First();
+    _context.Categories.Remove(removeCategory);
+    _context.SaveChanges();
 }
 
 
