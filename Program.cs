@@ -7,15 +7,11 @@ Initializer.Build();
 using (var _context = new AppDbContext())
 {
     var category = new Category { Name = "Pencil", Products = new List<Product> {
-        new Product{Name="Rotring", Price=500, Stock=100, Barcode="qwewq"},
-        new Product{Name="Faber", Price=500, Stock=100, Barcode="qwewq2"},
+        new Product{Name="Rotring", Price=500, Stock=100, Barcode="qwewq", Kdv=1},
+        new Product{Name="Faber", Price=500, Stock=100, Barcode="qwewq2",Kdv=2},
     }
     };
     _context.Add(category);
-    _context.SaveChanges();
-
-    var removeCategory = _context.Categories.First();
-    _context.Categories.Remove(removeCategory);
     _context.SaveChanges();
 }
 

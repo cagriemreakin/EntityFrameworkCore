@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Configuration;
 
 namespace CodeFirst.DAL
@@ -21,6 +22,13 @@ namespace CodeFirst.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
+            modelBuilder.Entity<Product>().Property(x => x.PriceKdv).HasComputedColumnSql("[Price] * [Kdv]");
+            //modelBuilder.Entity<Product>().Property(x => x.PriceKdv).ValueGeneratedNever(); -> None
+            //modelBuilder.Entity<Product>().Property(x => x.PriceKdv).ValueGeneratedOnAdd(); -> Identity
+            //modelBuilder.Entity<Product>().Property(x => x.PriceKdv).ValueGeneratedOnAddOrUpdate(); -> Computed
+
+
             modelBuilder.Entity<Product>().HasOne(x => x.ProductFeature).WithOne(x => x.Product).HasForeignKey<ProductFeature>(x => x.Id);
 
             // we can change delete behaviour of our table in here Cascade,Restrict,SetNull or NoAction
