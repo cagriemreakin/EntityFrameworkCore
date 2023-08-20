@@ -7,7 +7,6 @@ namespace CodeFirst.DAL
 	{
 
 
-        public DbSet<BasePerson> Persons { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Manager> Managers { get; set; }
 
@@ -21,10 +20,22 @@ namespace CodeFirst.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //TPT
-            modelBuilder.Entity<BasePerson>().ToTable("Persons");
-            modelBuilder.Entity<Employee>().ToTable("Employees");
-            modelBuilder.Entity<Manager>().ToTable("Managers");
+            //Owned entity definition
+            modelBuilder.Entity<Manager>().OwnsOne(x => x.Person, p => {
+                p.Property(x => x.FirstName).HasColumnName("FirstName");
+                p.Property(x => x.LastName).HasColumnName("LastName");
+                p.Property(x => x.Age).HasColumnName("Age");
+
+
+            });
+            modelBuilder.Entity<Employee>().OwnsOne(x => x.Person, p =>
+            {
+                p.Property(x => x.FirstName).HasColumnName("FirstName");
+                p.Property(x => x.LastName).HasColumnName("LastName");
+                p.Property(x => x.Age).HasColumnName("Age");
+
+
+            });
 
             base.OnModelCreating(modelBuilder);
         }
