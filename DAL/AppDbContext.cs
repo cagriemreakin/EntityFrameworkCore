@@ -7,9 +7,11 @@ namespace CodeFirst.DAL
 	{
 
 
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Manager> Managers { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
+        public DbSet<ProductFeature> ProductFeatures { get; set; }
+        public DbSet<ProductFull> ProductFulls { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -20,23 +22,10 @@ namespace CodeFirst.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Owned entity definition
-            modelBuilder.Entity<Manager>().OwnsOne(x => x.Person, p => {
-                p.Property(x => x.FirstName).HasColumnName("FirstName");
-                p.Property(x => x.LastName).HasColumnName("LastName");
-                p.Property(x => x.Age).HasColumnName("Age");
 
-
-            });
-            modelBuilder.Entity<Employee>().OwnsOne(x => x.Person, p =>
-            {
-                p.Property(x => x.FirstName).HasColumnName("FirstName");
-                p.Property(x => x.LastName).HasColumnName("LastName");
-                p.Property(x => x.Age).HasColumnName("Age");
-
-
-            });
-
+            modelBuilder.Entity<Product>().HasOne(x => x.ProductFeature).WithOne(x => x.Product).HasForeignKey<ProductFeature>(x => x.Id);
+            modelBuilder.Entity<ProductFull>().HasNoKey();
+            modelBuilder.Entity<User>().HasNoKey();
             base.OnModelCreating(modelBuilder);
         }
 
