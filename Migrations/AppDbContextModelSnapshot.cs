@@ -45,9 +45,6 @@ namespace CodeFirst.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Barcode")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -55,7 +52,8 @@ namespace CodeFirst.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
@@ -67,6 +65,11 @@ namespace CodeFirst.Migrations
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("Url");
 
                     b.HasKey("Id");
 
@@ -111,19 +114,6 @@ namespace CodeFirst.Migrations
                         .HasColumnType("int");
 
                     b.ToTable("ProductFulls");
-                });
-
-            modelBuilder.Entity("CodeFirst.DAL.User", b =>
-                {
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("CodeFirst.DAL.Product", b =>

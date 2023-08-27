@@ -25,7 +25,15 @@ namespace CodeFirst.DAL
 
             modelBuilder.Entity<Product>().HasOne(x => x.ProductFeature).WithOne(x => x.Product).HasForeignKey<ProductFeature>(x => x.Id);
             modelBuilder.Entity<ProductFull>().HasNoKey();
-            modelBuilder.Entity<User>().HasNoKey();
+
+
+            //not mapped
+            modelBuilder.Entity<Product>().Ignore(x => x.Barcode);
+
+            //save as varchar
+            modelBuilder.Entity<Product>().Property(x => x.Name).IsUnicode(false);
+
+            modelBuilder.Entity<Product>().Property(x => x.Url).HasColumnType("varchar(500)").HasColumnName("Url");
             base.OnModelCreating(modelBuilder);
         }
 
