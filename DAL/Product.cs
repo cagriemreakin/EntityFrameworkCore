@@ -11,7 +11,11 @@ namespace CodeFirst.DAL
         [Precision(18, 2)]
 
         public decimal Price { get; set; }
-		public int Stock { get; set; }
+        [Precision(18, 2)]
+
+        public decimal DiscountPrice { get; set; }
+
+        public int Stock { get; set; }
 
 		public string Url { get; set; }
 		public string? Barcode { get; set; }
