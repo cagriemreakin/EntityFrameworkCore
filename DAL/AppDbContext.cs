@@ -30,6 +30,7 @@ namespace CodeFirst.DAL
             //Index
             modelBuilder.Entity<Product>().HasIndex(x => x.Name).IncludeProperties(x => new { x.Price, x.Stock });
 
+
             //composite index
             modelBuilder.Entity<Product>().HasIndex(x => new { x.Name, x.Url });
 
