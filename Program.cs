@@ -9,19 +9,29 @@ using (var _context = new AppDbContext())
 {
     try
     {
+        //join
+        var result = (from c in _context.Categories
+                      join p in _context.Products on c.Id equals p.CategoryId
+                      select new {p}
+                      ).ToListAsync();
 
-        //var category = new Category { Name = "Pencils" };
-        //_context.Categories.Add(category);
+        //left join
+        var leftJoin = await (from c in _context.Categories
+                      join pl in _context.Products on c.Id equals pl.CategoryId into plist
 
-        //category.Products.Add(new Product { Name = "Rotring", Price = 100, Kdv = 10, PriceKdv = 20, Barcode = "sad", Stock = 200, ProductFeature = new ProductFeature { Height = 10, Width = 2 } });
-        //category.Products.Add(new Product { Name = "Rotring2", Price = 100, Kdv = 10, PriceKdv = 20, Barcode = "sad", Stock = 200, ProductFeature = new ProductFeature { Height = 10, Width = 2 } });
-        //category.Products.Add(new Product { Name = "Rotring3", Price = 100, Kdv = 10, PriceKdv = 20, Barcode = "sad", Stock = 200, ProductFeature = new ProductFeature { Height = 10, Width = 2 } });
+                      from pl in plist.DefaultIfEmpty()
+                      select new {c, pl }
+                ).ToListAsync();
+        //right join
+        var rightJoin = await (from pl in _context.Products
+                              join c in _context.Categories on pl.CategoryId equals c.Id into plist
 
-        //_context.SaveChanges();
-        // 1th. 
-        var productFull = _context.ProductFulls.FromSqlRaw(@"SELECT p.Id as Product_Id, c.Name as CategoryName,p.Name,p.Price,pf.Width from Products p JOIN
-ProductFeatures pf on p.Id =pf.Id
-JOIN Categories c on c.Id = p.CategoryId").ToList();
+                              from c in plist.DefaultIfEmpty()
+                              select new { c, pl }
+                ).ToListAsync();
+
+        //full outer join
+        var fullOurterJoin = leftJoin.Union(rightJoin);
 
 
     }
